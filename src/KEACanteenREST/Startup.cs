@@ -40,8 +40,11 @@ namespace KEACanteenREST
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {            
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole();
+            loggerFactory.AddDebug(LogLevel.Information);
+
             if (env.IsDevelopment())
             {
                 // When app is in development return the stack trace
@@ -54,7 +57,14 @@ namespace KEACanteenREST
                 app.UseExceptionHandler(appbuilder => 
                     {
                         appbuilder.Run(async context =>
-                        {                           
+                        {
+                            var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                            if (exceptionHandlerFeature != null)
+                            {
+                                var logger = loggerFactory.CreateLogger("Serilog Global exception logger");
+                                logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
+                            }
+
                             context.Response.StatusCode = 500;
                             await context.Response.WriteAsync("Unexpected fault happened. Please try again later!");
                         });

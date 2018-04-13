@@ -33,6 +33,8 @@ namespace KEACanteenREST.Controllers
         {            
             var dataFromAzure = _context.SensorDatas;
             var modelToReturn = Mapper.Map<IEnumerable<RecordDto>>(dataFromAzure);
+
+            _logger.LogInformation(100, $"All data measurements have been requested at UTC time {DateTime.UtcNow}");
             return Ok(modelToReturn);                        
         }
 
@@ -57,6 +59,9 @@ namespace KEACanteenREST.Controllers
             }
 
             var modelToReturn = Mapper.Map<RecordDto>(dataFromAzure);
+
+            _logger.LogInformation(100, $"Data with {id} ID has been requested at UTC time {DateTime.UtcNow}");
+
             return Ok(modelToReturn);
         }
 
@@ -98,9 +103,11 @@ namespace KEACanteenREST.Controllers
                 {
                     // For the logger file
                     throw new Exception("Updating a record failed on save.");
+
                 }
             }
 
+            _logger.LogInformation(100, $"Data with {id} ID has been updated at UTC time {DateTime.UtcNow}");
             return NoContent();
         }
         
@@ -125,20 +132,25 @@ namespace KEACanteenREST.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
+                _logger.LogError(e.Message, e.InnerException);
+
                 if (SensorDatasExists(dataForAzure.Id))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
                 else
-                {
+                {                    
                     // For the logger file
                     throw new Exception("Creating a record failed on save.");
+
                 }
             }
 
             var modelToReturn = Mapper.Map<RecordDto>(dataForAzure);
+            
+            _logger.LogInformation(100, $"Data with {dataForAzure.Id} ID has been created at UTC time {DateTime.UtcNow}");
 
             // Status code 201 with the location (route) in the response header
             return CreatedAtRoute("GetById", new { id = modelToReturn.LocationIdentifier }, modelToReturn);
@@ -170,10 +182,13 @@ namespace KEACanteenREST.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message, e.InnerException);
                 // For the logger file
                 throw new Exception($"Deleting a record failed during the process. Trace: {e.StackTrace}");
-            }            
+                
+            }
 
+            _logger.LogInformation(100, $"Data with {id} ID has been deleted at UTC time {DateTime.UtcNow}");
             // Succesful status code 204 - No Content
             return NoContent();
         }
