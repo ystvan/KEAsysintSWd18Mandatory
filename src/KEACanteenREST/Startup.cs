@@ -43,7 +43,7 @@ namespace KEACanteenREST
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
-            loggerFactory.AddDebug(LogLevel.Information);
+            loggerFactory.AddDebug(LogLevel.Error);
 
             if (env.IsDevelopment())
             {
