@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KEACanteenREST.Models;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace KEACanteenREST.Controllers
 {
@@ -14,10 +15,12 @@ namespace KEACanteenREST.Controllers
     [Route("api/SensorDatas")]
     public class SensorDatasController : Controller
     {
+        private ILogger<SensorDatasController> _logger;
         private readonly db_sysint_prodContext _context;
 
-        public SensorDatasController(db_sysint_prodContext context)
+        public SensorDatasController(db_sysint_prodContext context, ILogger<SensorDatasController> logger)
         {
+            _logger = logger;
             _context = context;
         }
         
@@ -38,7 +41,7 @@ namespace KEACanteenREST.Controllers
         /// </summary>
         /// <param name="id">The Guid Id of a single measurement resource</param>
         /// <returns>A single measurement record as a response payload</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetById")]
         public async Task<IActionResult> GetSensorDatas([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
@@ -61,22 +64,25 @@ namespace KEACanteenREST.Controllers
         /// Sample URI and HTTP method: PUT: api/SensorDatas/32a483a6-3eb8-4cca-8f63-3394c95ecd0b
         /// </summary>
         /// <param name="id">The Guid Id of a single measurement resource</param>
-        /// <param name="sensorDatas">A request payload Measurement object</param>
+        /// <param name="record">A request payload Measurement object</param>
         /// <returns>Updates the collection by adding a new Measurement object from the request payload</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSensorDatas([FromRoute] Guid id, [FromBody] SensorDatas sensorDatas)
+        public async Task<IActionResult> PutSensorDatas([FromRoute] Guid id, [FromBody] RecordForUpdateDto record)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != sensorDatas.Id)
+            var dataFromAzure = await _context.SensorDatas.SingleOrDefaultAsync(m => m.Id == id);
+            if (dataFromAzure == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(sensorDatas).State = EntityState.Modified;
+            var dataForAzure = Mapper.Map<SensorDatas>(record);
+            
+            _context.Entry(dataForAzure).State = EntityState.Modified;
 
             try
             {
@@ -90,7 +96,8 @@ namespace KEACanteenREST.Controllers
                 }
                 else
                 {
-                    throw;
+                    // For the logger file
+                    throw new Exception("Updating a record failed on save.");
                 }
             }
 
@@ -100,34 +107,41 @@ namespace KEACanteenREST.Controllers
         /// <summary>
         /// Sample URI and HTTP method: POST: api/SensorDatas
         /// </summary>
-        /// <param name="sensorDatas">A measurement object as a request payload</param>
+        /// <param name="record">A measurement object as a request payload</param>
         /// <returns>Create a resource according to the Measurement object in the request payload</returns>
         [HttpPost]
-        public async Task<IActionResult> PostSensorDatas([FromBody] SensorDatas sensorDatas)
+        public async Task<IActionResult> PostSensorDatas([FromBody] RecordForCreationDto record)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.SensorDatas.Add(sensorDatas);
+            var dataForAzure = Mapper.Map<SensorDatas>(record);
+
+            _context.SensorDatas.Add(dataForAzure);
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (SensorDatasExists(sensorDatas.Id))
+                if (SensorDatasExists(dataForAzure.Id))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
                 else
                 {
-                    throw;
+                    // For the logger file
+                    throw new Exception("Creating a record failed on save.");
                 }
             }
 
-            return CreatedAtAction("GetSensorDatas", new { id = sensorDatas.Id }, sensorDatas);
+            var modelToReturn = Mapper.Map<RecordDto>(dataForAzure);
+
+            // Status code 201 with the location (route) in the response header
+            return CreatedAtRoute("GetById", new { id = modelToReturn.LocationIdentifier }, modelToReturn);
         }
 
         /// <summary>
@@ -150,11 +164,21 @@ namespace KEACanteenREST.Controllers
             }
 
             _context.SensorDatas.Remove(sensorDatas);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                // For the logger file
+                throw new Exception($"Deleting a record failed during the process. Trace: {e.StackTrace}");
+            }            
 
-            return Ok(sensorDatas);
+            // Succesful status code 204 - No Content
+            return NoContent();
         }
 
+        //Helper method for sending 409 Conflict if Guid already exist
         private bool SensorDatasExists(Guid id)
         {
             return _context.SensorDatas.Any(e => e.Id == id);

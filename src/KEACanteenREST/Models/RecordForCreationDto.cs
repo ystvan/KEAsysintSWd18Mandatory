@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace KEACanteenREST.Models
 {
-    public class RecordDto
+    public class RecordForCreationDto
     {
         [Required(ErrorMessage = "Location Id cannot be empty")]
-        public Guid LocationIdentifier { get; set; }
+        public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Light mesurement cannot be null")]
         public int Light { get; set; }
@@ -18,6 +18,7 @@ namespace KEACanteenREST.Models
         public int Temperature { get; set; }
 
         [Required(ErrorMessage = "Time of recording cannot be empty")]
-        public string RecordedAt { get; set; }
+        public string Timestamp { get; set; }
+
     }
 }

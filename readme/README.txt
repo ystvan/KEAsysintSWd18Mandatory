@@ -25,6 +25,7 @@ Web Application:
 	users consume from their favourite browsers
 	user logs in with KEA credentials
 	Can see all measurements stored in Azure DB
+	See Server logs from admin console
 
 Identity Server
 
@@ -42,19 +43,19 @@ REST API:
 
 	CRUD measurements from Azure DB
 	Webb App is using to CRUD the data measurements from Azure
-	See server logs...
+	Write server logs to Azure
 
 	REST 6 constraints: 
 
 		1. client server constraint (client abd server seperated)
 		2. statelessness (state is contained within the request)
-		3. cachable (each rsponse message must explicitly state is it cachable or not)
+		3. cachable (each response message must explicitly state is it cachable or not)
 		4. layered system (client cannot tell what layer it's connected to)
 		5. code on demand (server can extend client functionality)
 		6. uniform interface (api and consumers share one single technical interface: URI, Method, Media Type)
-			6.1 identification of resources (resources are conceptually seperate from representation (json is != server representation)
+			6.1 identification of resources (resources are conceptually seperate from representation (json is != server representation) => Mapping DTOs in Startup
 			6.2 manipulation of resources through representations (repr + metadata should be sufficient to modify or delete resource)
-			6.3 self-descriptive msg (each msg must include enough info to describe how to process it) 
+			6.3 self-descriptive msg (each msg must include enough info to describe how to process it) => status code 415 - unsupported media type, or 409 Conflict and so on
 			6.4 HATEOAS (how to consume and use the api)
 
 

@@ -12,6 +12,7 @@ using KEACanteenREST.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace KEACanteenREST
 {
@@ -32,6 +33,7 @@ namespace KEACanteenREST
                 // Content negotiation Request Header Accept: (default) application/json, but application/xml is supported too
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
 
             services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
@@ -52,7 +54,7 @@ namespace KEACanteenREST
                 app.UseExceptionHandler(appbuilder => 
                     {
                         appbuilder.Run(async context =>
-                        {
+                        {                           
                             context.Response.StatusCode = 500;
                             await context.Response.WriteAsync("Unexpected fault happened. Please try again later!");
                         });
@@ -66,6 +68,12 @@ namespace KEACanteenREST
                     .ForMember(dest => dest.LocationIdentifier, opt => opt.MapFrom(source => source.Id))
                     .ForMember(dest => dest.Temperature, opt => opt.MapFrom(source => source.Temperature))
                     .ForMember(dest => dest.RecordedAt, opt => opt.MapFrom(source => source.Timestamp));
+
+                configure.CreateMap<RecordForCreationDto, SensorDatas>();
+                configure.CreateMap<RecordForUpdateDto, SensorDatas>()
+                    .ForMember(dest => dest.Id, opt => opt.Ignore())
+                    .ForMember(dest => dest.Timestamp, opt => opt.Ignore());
+
             });
 
             app.UseMvc();
