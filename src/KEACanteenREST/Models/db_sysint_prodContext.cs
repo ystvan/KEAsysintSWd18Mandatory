@@ -9,15 +9,7 @@ namespace KEACanteenREST.Models
         public db_sysint_prodContext(DbContextOptions<db_sysint_prodContext> options) : base(options) { }
         public virtual DbSet<MigrationHistory> MigrationHistory { get; set; }
         public virtual DbSet<SensorDatas> SensorDatas { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer(@"Server=tcp:sysint.database.windows.net,1433;Initial Catalog=db-sysint-prod;Persist Security Info=False;User ID=PbKxhmUQS;Password=g]iY47upJ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-        //    }
-        //}
-
+        public virtual DbSet<Logs> Logs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MigrationHistory>(entity =>
@@ -42,6 +34,13 @@ namespace KEACanteenREST.Models
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Timestamp).IsRequired();
+            });
+
+            modelBuilder.Entity<Logs>(entity =>
+            {
+                entity.Property(e => e.Level).HasMaxLength(128);
+
+                entity.Property(e => e.TimeStamp).HasColumnType("datetime");
             });
         }
     }
