@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KEACanteenREST.Models;
+using AutoMapper;
 
 namespace KEACanteenREST.Controllers
 {
-    [Produces("application/json")]
+    
     [Route("api/SensorDatas")]
     public class SensorDatasController : Controller
     {
@@ -19,15 +20,24 @@ namespace KEACanteenREST.Controllers
         {
             _context = context;
         }
-
-        // GET: api/SensorDatas
+        
+        /// <summary>
+        /// Sample URI and HTTP method: GET: api/SensorDatas
+        /// </summary>
+        /// <returns>A collection of measurements as a response payload</returns>
         [HttpGet]
-        public IEnumerable<SensorDatas> GetSensorDatas()
-        {
-            return _context.SensorDatas;
+        public IActionResult GetSensorDatas()
+        {            
+            var dataFromAzure = _context.SensorDatas;
+            var modelToReturn = Mapper.Map<IEnumerable<RecordDto>>(dataFromAzure);
+            return Ok(modelToReturn);                        
         }
 
-        // GET: api/SensorDatas/5
+        /// <summary>
+        /// Sample URI and HTTP method: GET api/SensorDatas/32a483a6-3eb8-4cca-8f63-3394c95ecd0b
+        /// </summary>
+        /// <param name="id">The Guid Id of a single measurement resource</param>
+        /// <returns>A single measurement record as a response payload</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSensorDatas([FromRoute] Guid id)
         {
@@ -36,17 +46,23 @@ namespace KEACanteenREST.Controllers
                 return BadRequest(ModelState);
             }
 
-            var sensorDatas = await _context.SensorDatas.SingleOrDefaultAsync(m => m.Id == id);
+            var dataFromAzure = await _context.SensorDatas.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (sensorDatas == null)
+            if (dataFromAzure == null)
             {
                 return NotFound();
             }
 
-            return Ok(sensorDatas);
+            var modelToReturn = Mapper.Map<RecordDto>(dataFromAzure);
+            return Ok(modelToReturn);
         }
 
-        // PUT: api/SensorDatas/5
+        /// <summary>
+        /// Sample URI and HTTP method: PUT: api/SensorDatas/32a483a6-3eb8-4cca-8f63-3394c95ecd0b
+        /// </summary>
+        /// <param name="id">The Guid Id of a single measurement resource</param>
+        /// <param name="sensorDatas">A request payload Measurement object</param>
+        /// <returns>Updates the collection by adding a new Measurement object from the request payload</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSensorDatas([FromRoute] Guid id, [FromBody] SensorDatas sensorDatas)
         {
@@ -80,8 +96,12 @@ namespace KEACanteenREST.Controllers
 
             return NoContent();
         }
-
-        // POST: api/SensorDatas
+        
+        /// <summary>
+        /// Sample URI and HTTP method: POST: api/SensorDatas
+        /// </summary>
+        /// <param name="sensorDatas">A measurement object as a request payload</param>
+        /// <returns>Create a resource according to the Measurement object in the request payload</returns>
         [HttpPost]
         public async Task<IActionResult> PostSensorDatas([FromBody] SensorDatas sensorDatas)
         {
@@ -110,7 +130,11 @@ namespace KEACanteenREST.Controllers
             return CreatedAtAction("GetSensorDatas", new { id = sensorDatas.Id }, sensorDatas);
         }
 
-        // DELETE: api/SensorDatas/5
+        /// <summary>
+        /// Sample URI and HTTP method:  DELETE: api/SensorDatas/32a483a6-3eb8-4cca-8f63-3394c95ecd0b
+        /// </summary>
+        /// <param name="id">The Guid Id of a single measurement resource</param>
+        /// <returns>A collection of measurements as a response payload without the deleted record</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSensorDatas([FromRoute] Guid id)
         {

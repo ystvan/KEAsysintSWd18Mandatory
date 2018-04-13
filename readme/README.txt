@@ -41,6 +41,7 @@ KEA Azure Active Directory
 REST API:
 
 	CRUD measurements from Azure DB
+	Webb App is using to CRUD the data measurements from Azure
 	See server logs...
 
 	REST 6 constraints: 
@@ -64,3 +65,9 @@ Twitter API:
 Twitter account:
 
 	See measurements, live update, can be followed to get the feed
+
+Twilio & Sendgrid
+
+	Multi factor authentication
+
+	
