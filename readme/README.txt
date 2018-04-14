@@ -68,12 +68,13 @@ REST API:
 			- status code 412 - Precondition Failed
 			- API is using the expiration model: allow the server to state how long a response is considered fresh
 			- ETag, Last-Modified headers (optimistic concurrency)
+			- Retry-After
 
 		4. layered system (client cannot tell what layer it's connected to)
 			- data access layer, 
 
 		5. code on demand (server can extend client functionality)
-			- OPTIONAL CONSTRAINT
+			- OPTIONAL CONSTRAINT, NOT IMPLEMENTED
 
 		6. uniform interface (api and consumers share one single technical interface: URI, Method, Media Type)
 
@@ -81,12 +82,13 @@ REST API:
 				- (json is != server representation) => Mapping DTOs in Startup.cs
 
 			6.2 manipulation of resources through representations (repr + metadata should be sufficient to modify or delete resource)
-				- GET, PUT, POST, DELETE 
+				- GET, PUT, POST, DELETE, OPTIONS, HEAD
 
 			6.3 self-descriptive msg (each msg must include enough info to describe how to process it) 
 				- status code 415 - unsupported media type, 
 				- status code 409 - Conflict
 				- status code 304 - Not Modified
+				- status code 429 - Too many requests
 
 			6.4 HATEOAS (how to consume and use the api)
 				- intrensic knowledge of the API contract is required

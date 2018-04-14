@@ -1,4 +1,5 @@
 ﻿using AspNetCore.IServiceCollection.AddIUrlHelper;
+using AspNetCoreRateLimit;
 using KEACanteenREST.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -44,7 +45,8 @@ namespace KEACanteenREST
                 }
 
             });
-
+            services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
+            
             // Cahche
             services.AddHttpCacheHeaders(
                 (expirationModelOptions) 
@@ -55,7 +57,30 @@ namespace KEACanteenREST
                     { validationModelOptions.AddMustRevalidate = true; }                               
                 );
             services.AddResponseCaching();
-            services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
+
+            // Retelimiting
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>((options) =>
+            {
+                options.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
+                {
+                    // All endpoints can have 10 calls within 5 minutes
+                    new RateLimitRule(){
+                        Endpoint = "*",
+                        Limit = 10,
+                        Period = "5m"
+                    },
+                    // or 2 calls within 10 seconds
+                    new RateLimitRule(){
+                        Endpoint = "*",
+                        Limit = 2,
+                        Period = "10s"
+                    }
+                };
+            });
+
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,6 +130,7 @@ namespace KEACanteenREST
 
             });
 
+            app.UseIpRateLimiting();
             app.UseResponseCaching();
             app.UseHttpCacheHeaders();
             app.UseMvc();
