@@ -17,25 +17,35 @@ namespace KEACanteenREST.Controllers
     {
         private ILogger<SensorDatasController> _logger;
         private readonly db_sysint_prodContext _context;
+        private IUrlHelper _urlHelper;
 
-        public SensorDatasController(db_sysint_prodContext context, ILogger<SensorDatasController> logger)
+        public SensorDatasController(db_sysint_prodContext context, ILogger<SensorDatasController> logger, IUrlHelper urlHelper)
         {
             _logger = logger;
             _context = context;
+            _urlHelper = urlHelper;
         }
         
         /// <summary>
         /// Sample URI and HTTP method: GET: api/SensorDatas
         /// </summary>
         /// <returns>A collection of measurements as a response payload</returns>
-        [HttpGet]
+        [HttpGet(Name = "GetAllData")]
         public IActionResult GetSensorDatas()
         {            
             var dataFromAzure = _context.SensorDatas;
             var modelToReturn = Mapper.Map<IEnumerable<RecordDto>>(dataFromAzure);
 
             _logger.LogInformation(100, $"All data measurements have been requested at UTC time {DateTime.UtcNow}");
-            return Ok(modelToReturn);                        
+
+            modelToReturn = modelToReturn.Select(record =>
+            {
+                record = CreateLinksForRecord(record);
+                return record;
+            });
+            var wrapper = new LinkedCollectionResourceDto<RecordDto>(modelToReturn);
+
+            return Ok(CreateLinksForRecords(wrapper));                        
         }
 
         /// <summary>
@@ -62,7 +72,7 @@ namespace KEACanteenREST.Controllers
 
             _logger.LogInformation(100, $"Data with {id} ID has been requested at UTC time {DateTime.UtcNow}");
 
-            return Ok(modelToReturn);
+            return Ok(CreateLinksForRecord(modelToReturn));
         }
 
         /// <summary>
@@ -71,7 +81,7 @@ namespace KEACanteenREST.Controllers
         /// <param name="id">The Guid Id of a single measurement resource</param>
         /// <param name="record">A request payload Measurement object</param>
         /// <returns>Updates the collection by adding a new Measurement object from the request payload</returns>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateMeasurement")]
         public async Task<IActionResult> PutSensorDatas([FromRoute] Guid id, [FromBody] RecordForUpdateDto record)
         {
             if (!ModelState.IsValid)
@@ -153,7 +163,7 @@ namespace KEACanteenREST.Controllers
             _logger.LogInformation(100, $"Data with {dataForAzure.Id} ID has been created at UTC time {DateTime.UtcNow}");
 
             // Status code 201 with the location (route) in the response header
-            return CreatedAtRoute("GetById", new { id = modelToReturn.LocationIdentifier }, modelToReturn);
+            return CreatedAtRoute("GetById", new { id = modelToReturn.LocationIdentifier }, CreateLinksForRecord(modelToReturn));
         }
 
         /// <summary>
@@ -161,7 +171,7 @@ namespace KEACanteenREST.Controllers
         /// </summary>
         /// <param name="id">The Guid Id of a single measurement resource</param>
         /// <returns>A collection of measurements as a response payload without the deleted record</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteById")]
         public async Task<IActionResult> DeleteSensorDatas([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
@@ -197,6 +207,34 @@ namespace KEACanteenREST.Controllers
         private bool SensorDatasExists(Guid id)
         {
             return _context.SensorDatas.Any(e => e.Id == id);
+        }
+
+        private RecordDto CreateLinksForRecord(RecordDto record) {
+
+            record.Links.Add(new LinkDto(_urlHelper.Link("GetById", 
+                new { id = record.LocationIdentifier }), 
+                "self", 
+                "GET"));
+            record.Links.Add(new LinkDto(_urlHelper.Link("UpdateMeasurement", 
+                new { id = record.LocationIdentifier }),
+                "update_measurement", 
+                "PUT"));
+            record.Links.Add(new LinkDto(_urlHelper.Link("DeleteById", 
+                new { id = record.LocationIdentifier }), 
+                "delete_measurement", 
+                "DELETE"));
+            
+            return record;
+        }
+
+        private LinkedCollectionResourceDto<RecordDto> CreateLinksForRecords(LinkedCollectionResourceDto<RecordDto> wrapper) {
+
+            // Link to self
+            wrapper.Links.Add(new LinkDto(_urlHelper.Link("GetAllData", new { }), 
+                "self", 
+                "GET"));
+
+            return wrapper;
         }
     }
 }

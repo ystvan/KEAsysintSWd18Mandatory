@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KEACanteenREST.Models
 {
-    public class RecordDto
+    public class RecordDto : LinkedResourceBaseDto
     {
         [Required(ErrorMessage = "Location Id cannot be empty")]
         public Guid LocationIdentifier { get; set; }

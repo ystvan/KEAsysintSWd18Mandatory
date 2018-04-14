@@ -76,6 +76,7 @@ REST API:
 
 			6.4 HATEOAS (how to consume and use the api)
 				-intrensic knowledge of the API contract is required
+				-href, rel, method (resonate to anchor <a href="uri" rel="type" type="media type"> tags in HTML)
 
 
 Twitter API:
