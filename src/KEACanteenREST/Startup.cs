@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace KEACanteenREST
 {
@@ -26,8 +29,10 @@ namespace KEACanteenREST
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddUrlHelper();
-            services.AddMvc(setupAction => {
+            services.AddMvc(setupAction =>
+            {
 
                 // Content negotiation Request Header Accept: (default) application/json, but application/xml is supported too
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -45,16 +50,43 @@ namespace KEACanteenREST
                 }
 
             });
+
+            // swagger for documentation
+
+            services.AddSwaggerGen(c =>
+            {
+                 //this is a response to a call in case someone requests a swagger for my API
+                 c.SwaggerDoc("v1",
+                     new Info
+                     {
+                         Contact = new Contact
+                         {
+                             Email = "istv0050@edu.easj.dk",
+                             Name = "Istvan M",
+                             Url = "https://twitter.com/SmartCity_911"
+                         },
+                         License = new License
+                         {
+                             Name = "Do not try this at home",
+                             Url = "https://fronter.com/kea"
+                         },
+                         Description = "Mandatory REST with five constarints",
+                         TermsOfService = "None",
+                         Title = "SysInt Mandatory REST API",
+                         Version = "v1"
+
+                     });
+            });
             services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
-            
+
             // Cahche
             services.AddHttpCacheHeaders(
-                (expirationModelOptions) 
-                    => 
+                (expirationModelOptions)
+                    =>
                     { expirationModelOptions.MaxAge = 600; },
                 (validationModelOptions)
-                    => 
-                    { validationModelOptions.AddMustRevalidate = true; }                               
+                    =>
+                    { validationModelOptions.AddMustRevalidate = true; }
                 );
             services.AddResponseCaching();
 
@@ -64,11 +96,11 @@ namespace KEACanteenREST
             {
                 options.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
                 {
-                    // All endpoints can have 10 calls within 5 minutes
+                    // All endpoints can have 10 calls within 2 minutes
                     new RateLimitRule(){
                         Endpoint = "*",
                         Limit = 10,
-                        Period = "5m"
+                        Period = "2m"
                     },
                     // or 2 calls within 10 seconds
                     new RateLimitRule(){
@@ -98,7 +130,7 @@ namespace KEACanteenREST
             {
                 // In production return a generic error in the request/response pipeline
                 // Exception is handled in a global level, no need for try-catch blocks in ie.: controllers
-                app.UseExceptionHandler(appbuilder => 
+                app.UseExceptionHandler(appbuilder =>
                     {
                         appbuilder.Run(async context =>
                         {
@@ -112,8 +144,22 @@ namespace KEACanteenREST
                             context.Response.StatusCode = 500;
                             await context.Response.WriteAsync("Unexpected fault happened. Please try again later!");
                         });
-                });
+                    });
             }
+            //static file server
+            app.UseStaticFiles();
+
+            app.UseCors(builder =>
+                builder.AllowAnyMethod().AllowAnyMethod().AllowAnyOrigin()
+            );
+            
+            //configure a UI for swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SysInt Mandatory REST API v1");
+
+            });
 
             AutoMapper.Mapper.Initialize(configure =>
             {
