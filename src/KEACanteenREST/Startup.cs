@@ -44,7 +44,17 @@ namespace KEACanteenREST
                 }
 
             });
-            
+
+            // Cahche
+            services.AddHttpCacheHeaders(
+                (expirationModelOptions) 
+                    => 
+                    { expirationModelOptions.MaxAge = 600; },
+                (validationModelOptions)
+                    => 
+                    { validationModelOptions.AddMustRevalidate = true; }                               
+                );
+            services.AddResponseCaching();
             services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
         }
 
@@ -95,6 +105,8 @@ namespace KEACanteenREST
 
             });
 
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
             app.UseMvc();
         }
     }

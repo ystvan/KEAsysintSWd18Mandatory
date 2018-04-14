@@ -64,6 +64,10 @@ REST API:
 
 		3. cachable (each response message must explicitly state is it cachable or not)
 			- requesting the same resources, it is necessary that these responses might be cached
+			- status code 304 - Not Modified if ETag is matching
+			- status code 412 - Precondition Failed
+			- API is using the expiration model: allow the server to state how long a response is considered fresh
+			- ETag, Last-Modified headers (optimistic concurrency)
 
 		4. layered system (client cannot tell what layer it's connected to)
 			- data access layer, 
@@ -82,7 +86,7 @@ REST API:
 			6.3 self-descriptive msg (each msg must include enough info to describe how to process it) 
 				- status code 415 - unsupported media type, 
 				- status code 409 - Conflict
-				-
+				- status code 304 - Not Modified
 
 			6.4 HATEOAS (how to consume and use the api)
 				- intrensic knowledge of the API contract is required
