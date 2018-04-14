@@ -72,17 +72,17 @@ namespace SmartCity911.Services
                     
                     if (jsonMeasurement.Temperature <= 40)
                     {
-                        var tweet = $"All good! Go back to sleep! Lights seems normal and the current temperature is {jsonMeasurement.Temperature} °C";
+                        var tweet = $"All good! Go back to sleep! Lights seems normal and the current temperature is {jsonMeasurement.Temperature} °C #keasysint";
                         TwitterHandler.Alarm(tweet);
                     }
                     else if (41 <= jsonMeasurement.Temperature && jsonMeasurement.Temperature <= 100)
                     {
-                        var tweet = $"Something is not right, please ask for feedback and report to Captain Holt! Current temperature is {jsonMeasurement.Temperature} °C! Address Refnumber: {jsonMeasurement.Id}";
+                        var tweet = $"Something is not right, please ask for feedback and report to Captain Holt! Current temperature is {jsonMeasurement.Temperature} °C! Address Refnumber: {jsonMeasurement.Id} #keasysint";
                         TwitterHandler.Alarm(tweet);
                     }
                     else if(100 < jsonMeasurement.Temperature)
                     {
-                        var tweet = $"ALARM! The roof is on fire!! The temperature is {jsonMeasurement.Temperature} °C! Go to the designated address ! Reported at {jsonMeasurement.Timestamp}, hurry up!";
+                        var tweet = $"ALARM! The roof is on fire!! The temperature is {jsonMeasurement.Temperature} °C! Go to the designated address ! Reported at {jsonMeasurement.Timestamp}, hurry up! #keasysint";
                         TwitterHandler.Alarm(tweet);
                     }
 
