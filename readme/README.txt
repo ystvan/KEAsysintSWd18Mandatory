@@ -36,18 +36,22 @@ Identity Server
 	redirects to KEA Azure Active Directory
 	user authenticats with OAuth2 & OpenID Connect => asks User for consent (getting user info as a token)
 	sends the id token back to the Web Application
+	https://rollcallkea-testidentity.azurewebsites.net/
+	https://rollcallkea-testidentity.azurewebsites.net/account/login
 
 KEA Azure Active Directory
 
 	handled and managed by KEA IT
 	Office 365 accounts,
 	Microsoft accounts (all KEA affiliates such as faculty staff, teachers, students...)
+	
 
 REST API:
 
 	CRUD measurements from Azure DB
 	Webb App is using to CRUD the data measurements from Azure
 	Write server logs to Azure
+	http://sysint-rest.azurewebsites.net/swagger/
 
 	REST 6 constraints: 
 
@@ -89,6 +93,7 @@ REST API:
 				- status code 409 - Conflict
 				- status code 304 - Not Modified
 				- status code 429 - Too many requests
+				- SwaggerUI
 
 			6.4 HATEOAS (how to consume and use the api)
 				- intrensic knowledge of the API contract is required
