@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace KEACanteenREST
 {
@@ -31,6 +32,17 @@ namespace KEACanteenREST
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+
+                // Adding custom media type
+
+                var jsonOutPutFormatter = setupAction.OutputFormatters
+                                                .OfType<JsonOutputFormatter>()
+                                                .FirstOrDefault();
+                if (jsonOutPutFormatter != null)
+                {
+                    jsonOutPutFormatter.SupportedMediaTypes.Add("application/vnd.sysint.hateoas+json");
+                }
+
             });
             
             services.AddDbContext<db_sysint_prodContext>(options => options.UseSqlServer(Configuration["connectionStrings:azureDBConnectionString"]));
