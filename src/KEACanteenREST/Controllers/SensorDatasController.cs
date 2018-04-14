@@ -31,6 +31,7 @@ namespace KEACanteenREST.Controllers
         /// </summary>
         /// <returns>A collection of measurements as a response payload</returns>
         [HttpGet(Name = "GetAllData")]
+        [HttpHead]
         public IActionResult GetSensorDatas([FromHeader(Name = "Accept")] string mediaType)
         {            
             var dataFromAzure = _context.SensorDatas;
@@ -244,5 +245,8 @@ namespace KEACanteenREST.Controllers
 
             return wrapper;
         }
+
+        [HttpOptions]
+        public IActionResult GetSensorDatasOptions() { Response.Headers.Add("Allow", "GET,PUT,POST,DELETE,OPTIONS"); return Ok(); }
     }
 }
