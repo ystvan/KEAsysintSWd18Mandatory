@@ -15,6 +15,10 @@ Proxy:
 
 SOAP service on Azure Cloud SQL server:
 
+	- an envelope, which defines the message structure
+	- a set of encoding rules for expressing instances of application-defined datatypes
+	- a convention for representing procedure calls and responses
+
 	Services offered:
 		saving data to cloud (SQL server v.12 "sysint.database.windows.net")
 		getting data from cloud (SQL server v.12 "sysint.database.windows.net")
@@ -48,35 +52,42 @@ REST API:
 	REST 6 constraints: 
 
 		1. client server constraint (client and server seperated)
-			-
+			- obvious A consumer invokes the service by sending the corresponding request message, 
+			  and the service either rejects the request or performs the requested task before sending 
+			  a response message back to the consumer.
+			- clients are not concerned with data storage
+			- Servers are not concerned with the user interface or user state
 
 		2. statelessness (state is contained within the request)
-			-
+			- each request from a service consumer should contain 
+			  all the necessary information for the service to understand the meaning of the request
 
 		3. cachable (each response message must explicitly state is it cachable or not)
-			-
+			- requesting the same resources, it is necessary that these responses might be cached
 
 		4. layered system (client cannot tell what layer it's connected to)
-			-
+			- data access layer, 
 
 		5. code on demand (server can extend client functionality)
-			-
+			- OPTIONAL CONSTRAINT
 
 		6. uniform interface (api and consumers share one single technical interface: URI, Method, Media Type)
+
 			6.1 identification of resources (resources are conceptually seperate from representation 
-				-(json is != server representation) => Mapping DTOs in Startup.cs
+				- (json is != server representation) => Mapping DTOs in Startup.cs
 
 			6.2 manipulation of resources through representations (repr + metadata should be sufficient to modify or delete resource)
-				-
+				- GET, PUT, POST, DELETE 
 
 			6.3 self-descriptive msg (each msg must include enough info to describe how to process it) 
-				-status code 415 - unsupported media type, 
-				-status code 409 - Conflict
+				- status code 415 - unsupported media type, 
+				- status code 409 - Conflict
 				-
 
 			6.4 HATEOAS (how to consume and use the api)
-				-intrensic knowledge of the API contract is required
-				-href, rel, method (resonate to anchor <a href="uri" rel="type" type="media type"> tags in HTML)
+				- intrensic knowledge of the API contract is required
+				- href, rel, method (resonate to anchor <a href="uri" rel="type" type="media type"> tags in HTML)
+				- http://domain/api/ will get the root content
 
 
 Twitter API:

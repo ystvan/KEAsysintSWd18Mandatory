@@ -31,21 +31,29 @@ namespace KEACanteenREST.Controllers
         /// </summary>
         /// <returns>A collection of measurements as a response payload</returns>
         [HttpGet(Name = "GetAllData")]
-        public IActionResult GetSensorDatas()
+        public IActionResult GetSensorDatas([FromHeader(Name = "Accept")] string mediaType)
         {            
             var dataFromAzure = _context.SensorDatas;
             var modelToReturn = Mapper.Map<IEnumerable<RecordDto>>(dataFromAzure);
 
             _logger.LogInformation(100, $"All data measurements have been requested at UTC time {DateTime.UtcNow}");
 
-            modelToReturn = modelToReturn.Select(record =>
+            //content-type negotioation
+            if (mediaType == "application/vnd.sysint.hateoas+json")
             {
-                record = CreateLinksForRecord(record);
-                return record;
-            });
-            var wrapper = new LinkedCollectionResourceDto<RecordDto>(modelToReturn);
+                modelToReturn = modelToReturn.Select(record =>
+                {
+                    record = CreateLinksForRecord(record);
+                    return record;
+                });
+                var wrapper = new LinkedCollectionResourceDto<RecordDto>(modelToReturn);
 
-            return Ok(CreateLinksForRecords(wrapper));                        
+                return Ok(CreateLinksForRecords(wrapper));
+            }
+            // Simple representation
+            else
+                return Ok(modelToReturn);
+                                   
         }
 
         /// <summary>
@@ -126,7 +134,7 @@ namespace KEACanteenREST.Controllers
         /// </summary>
         /// <param name="record">A measurement object as a request payload</param>
         /// <returns>Create a resource according to the Measurement object in the request payload</returns>
-        [HttpPost]
+        [HttpPost(Name = "CreateMeasurement")]
         public async Task<IActionResult> PostSensorDatas([FromBody] RecordForCreationDto record)
         {
             if (!ModelState.IsValid)
