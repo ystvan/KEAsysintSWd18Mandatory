@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +12,7 @@ namespace KEAWebApp.Models
     public class Data
     {
         [DisplayName("Where?")]
-        public Guid Location { get; set; }
+        public Guid LocationIdentifier { get; set; }
 
         [DisplayName("Light-shining")]
         public int Light { get; set; }
@@ -17,7 +20,9 @@ namespace KEAWebApp.Models
         [DisplayName("Celsius grade")]
         public int Temperature { get; set; }
 
-        [DisplayName("When?")]
-        public string Recorded { get; set; }
+        [DisplayName("When?")]        
+        public string RecordedAt { get; set; }
     }
+
+    
 }

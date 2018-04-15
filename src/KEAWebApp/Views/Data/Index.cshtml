@@ -7,10 +7,10 @@
         <table class="table table-bordered table-responsive table-hover">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Location)</th>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().LocationIdentifier)</th>
                     <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Light)</th>
                     <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Temperature)</th>
-                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Recorded)</th>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().RecordedAt)</th>
 
 
                 </tr>
@@ -20,10 +20,10 @@
                 @foreach (var data in Model.Datas)
                 {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => data.Location)</td>
+                    <td>@Html.ValueFor(modelItem => data.LocationIdentifier)</td>
                     <td>@Html.DisplayFor(modelItem => data.Light)</td>
                     <td>@Html.DisplayFor(modelItem => data.Temperature)</td>
-                    <td>@Html.DisplayFor(modelItem => data.Recorded)</td>
+                    <td>@Html.ValueFor(modelItem => data.RecordedAt)</td>
 
                 </tr>
                 }

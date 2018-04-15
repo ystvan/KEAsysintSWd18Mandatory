@@ -4,8 +4,10 @@ using KEAWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -35,7 +37,20 @@ namespace KEAWebApp.Controllers
                     {
                         var result = response.Content.ReadAsStringAsync().Result;
 
-                        var measurements = JsonConvert.DeserializeObject<List<Data>>(result);
+                        //json serializer settings
+                        JsonSerializerSettings settings = new JsonSerializerSettings
+                        {
+                            NullValueHandling = NullValueHandling.Ignore,
+                            Culture = CultureInfo.CurrentCulture,
+                            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                            DateParseHandling = DateParseHandling.DateTime,
+                            Error = delegate (object sender, ErrorEventArgs args)
+                            {
+                                args.ErrorContext.Handled = true;
+                            }
+                        };
+
+                        var measurements = JsonConvert.DeserializeObject<List<Data>>(result, settings);
                         var viewModel = new ShowDataViewModel(measurements);
 
                         return View(viewModel);
