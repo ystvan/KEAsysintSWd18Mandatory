@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<br />
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <h1>Welcome to <br><br><strong>"Is KEA Canteen on Fire?"</strong> <br><br>App</h1>
+    </div>
+    <div class="col-md-4">
+        <a asp-area="" asp-controller="Home" asp-action="Hello"><img src="~/images/alfred-e-newman.jpg" alt="Security done well" class="img-responsive" /></a>
+    </div>
+    <div class="col-md-4">
+        <h1>Try it out!</h1>
+        <ul>
+            <li><a asp-area="" asp-controller="Data" asp-action="Index">Got to kitchen sensor measurements</a></li>
+            <li><a asp-area="" asp-controller="Logs" asp-action="Index">See the log files</a></li>
+        </ul>
+    </div>
+</div>

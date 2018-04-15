@@ -1,0 +1,42 @@
+﻿@model KEAWebApp.Models.ViewModels.ShowLogViewModel
+
+<br />
+<div class="container">
+    <div id="renderTable">
+        <table class="table table-bordered table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(g => g.Logs.FirstOrDefault().TimeStamp)</th>
+                    <th>@Html.DisplayNameFor(g => g.Logs.FirstOrDefault().Id)</th>
+                    <th>@Html.DisplayNameFor(g => g.Logs.FirstOrDefault().Level)</th>
+                    <th>@Html.DisplayNameFor(g => g.Logs.FirstOrDefault().Message)</th>
+                    <th>@Html.DisplayNameFor(g => g.Logs.FirstOrDefault().MessageTemplate)</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var log in Model.Logs)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => log.TimeStamp)</td>
+                    <td>@Html.DisplayFor(modelItem => log.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => log.Level)</td>
+                    <td>@Html.DisplayFor(modelItem => log.Message)</td>
+                    <td>@Html.DisplayFor(modelItem => log.MessageTemplate)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+        <br />
+        <br />
+
+    </div>
+    <button class="btn btn-default">
+        @Html.ActionLink("Go back to Home", "Index", "Home")
+    </button>
+
+
+</div>

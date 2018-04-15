@@ -1,0 +1,14 @@
+﻿@model KEAWebApp.Models.ViewModels.WhoIsItViewModel
+
+@{
+    ViewData["Title"] = "Hello";
+}
+
+<h2>Who are you?</h2>
+
+<div class="container">
+    <h4>As far as I see, you must be <br> <strong>@Model.WhoIsIt.Name</strong> <br> and your email is <strong>@Model.WhoIsIt.Email</strong> <br> Am I guessing right</h4>
+</div>
+<div>
+    <a asp-action="Index">Go Back</a>
+</div>
