@@ -1,0 +1,14 @@
+﻿@model KEAWebApp.Models.ViewModels.WhoIsItViewModel
+
+@{
+    ViewData["Title"] = "Hello";
+}
+
+<h2>Who are you?</h2>
+
+<div class="container">   
+    <h4>@Model.WhoIsIt</h4>
+</div>
+<div>   
+    <a asp-action="Index">Go Back</a>
+</div>
