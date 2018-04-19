@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HotelSecuritySensor.Models
+namespace KitchenSensor.Models
 {
     [Serializable()]
     public class Measurement

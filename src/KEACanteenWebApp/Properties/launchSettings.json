@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://localhost:44358/",
-      "sslPort": 44358
+      "applicationUrl": "http://localhost:51403/",
+      "sslPort": 0
     }
   },
   "profiles": {
@@ -12,16 +12,16 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "KEAWebApp": {
+    "KEACanteenWebApp": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:56570/"
+      "applicationUrl": "http://localhost:51404/"
     }
   }
 }

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyHomeSensor\HotelSecuritySensor.csproj" />
+    <ProjectReference Include="..\MyHomeSensor\KitchenSensor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

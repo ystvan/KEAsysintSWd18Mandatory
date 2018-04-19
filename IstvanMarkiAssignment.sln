@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E20BD85E-E29
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCity911", "src\MyHomeSmartHub\SmartCity911.csproj", "{1FC42074-3533-44C0-A232-B1CBDC9F44F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelSecuritySensor", "src\MyHomeSensor\HotelSecuritySensor.csproj", "{DA9EFBDD-72F0-4654-8003-2917A66A5B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenSensor", "src\MyHomeSensor\KitchenSensor.csproj", "{DA9EFBDD-72F0-4654-8003-2917A66A5B3C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "readme", "readme", "{18E0AD9D-9D1D-415D-BA56-BD47BD6856C8}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UdpBase", "src\UdpBase\UdpB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KEACanteenREST", "src\KEACanteenREST\KEACanteenREST.csproj", "{0C09E5AB-E22E-4807-897D-BD0598B82802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KEAWebApp", "src\KEAWebApp\KEAWebApp.csproj", "{CC91BCEB-582F-461A-A604-11DE60EEF9B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KEAWebApp", "src\KEAWebApp\KEAWebApp.csproj", "{CC91BCEB-582F-461A-A604-11DE60EEF9B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

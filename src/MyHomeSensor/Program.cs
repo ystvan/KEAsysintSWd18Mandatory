@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using HotelSecuritySensor.Services;
+using KitchenSensor.Services;
 
-namespace HotelSecuritySensor
+namespace KitchenSensor
 {
     class Program
     {
