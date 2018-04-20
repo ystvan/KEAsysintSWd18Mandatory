@@ -30,7 +30,7 @@ namespace KitchenSensor.Models
 
         public override string ToString()
         {
-            return $"Reported info from the hotel:\n\nCurrent light is: {Light} lumen\nCurrent temperature is {Temperature} Celsius\nRecorded at: {Timestamp}";
+            return $"Reported info from the KEA kitchen:\n\nCurrent light is: {Light} lumen\nCurrent temperature is {Temperature} Celsius\nRecorded at: {Timestamp}";
         }
 
     }
