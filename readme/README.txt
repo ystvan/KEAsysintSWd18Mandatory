@@ -26,6 +26,8 @@ SOAP service on Azure Cloud SQL server:
 
 Web Application:
 
+	https://sysint-webapp.azurewebsites.net/
+
 	users consume from their favourite browsers
 	user logs in with KEA credentials
 	Can see all measurements stored in Azure DB

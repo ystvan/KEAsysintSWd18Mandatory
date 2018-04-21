@@ -57,7 +57,15 @@ namespace KEAWebApp.Controllers
 
                         return View(viewModel);
                     }
-                    throw new Exception($"A problem happened while calling the API: {response.ReasonPhrase}");
+                    else
+                    {
+                        var m = new ApiResponseViewModel();
+                        m.Content = response.Content.ToString();
+                        m.Message = response.Headers.ToString();
+                        m.StatusCode = response.StatusCode.ToString();
+
+                        return RedirectToAction("ShowOtherStatusCodesFromApi", m);
+                    }
                 }
                 catch (HttpRequestException e)
                 {
