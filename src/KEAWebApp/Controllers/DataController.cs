@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace KEAWebApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class DataController : Controller
     {
         private readonly ISensorHttpClient _sensorHttpClient;
@@ -60,8 +60,8 @@ namespace KEAWebApp.Controllers
                     else
                     {
                         var m = new ApiResponseViewModel();
-                        m.Content = response.Content.ToString();
-                        m.Message = response.Headers.ToString();
+                        m.Content = response.Headers.ToString();
+                        m.Message = response.ToString();
                         m.StatusCode = response.StatusCode.ToString();
 
                         return RedirectToAction("ShowOtherStatusCodesFromApi", m);
@@ -119,8 +119,8 @@ namespace KEAWebApp.Controllers
                         else
                         {
                             var m = new ApiResponseViewModel();
-                            m.Content = response.Content.ToString();
-                            m.Message = response.Headers.ToString();
+                            m.Content = response.Headers.ToString();
+                            m.Message = response.ToString();
                             m.StatusCode = response.StatusCode.ToString();
                             
                             return RedirectToAction("ShowOtherStatusCodesFromApi", m );
