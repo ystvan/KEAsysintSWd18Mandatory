@@ -99,7 +99,7 @@ namespace KEACanteenREST
                     // All endpoints can have 10 calls within 2 minutes
                     new RateLimitRule(){
                         Endpoint = "*",
-                        Limit = 10,
+                        Limit = 4,
                         Period = "2m"
                     },
                     // or 2 calls within 10 seconds
