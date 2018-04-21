@@ -31,6 +31,7 @@ Web Application:
 	Can see all measurements stored in Azure DB
 	See Server logs from admin console
 
+
 Identity Server
 
 	redirects to KEA Azure Active Directory
@@ -98,9 +99,9 @@ REST API:
 			6.4 HATEOAS (how to consume and use the api)
 				- intrensic knowledge of the API contract is required
 				- href, rel, method (resonate to anchor <a href="uri" rel="type" type="media type"> tags in HTML)
-				- http://domain/api/ will get the root content
+				- http://<domain>/api/ will get the root content
 
-
+				
 Twitter API:
 
 	Connect to twitter account, tweet measurements to user's feed

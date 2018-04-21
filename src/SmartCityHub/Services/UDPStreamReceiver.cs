@@ -1,4 +1,4 @@
-﻿using HotelSecuritySensor.Models;
+﻿using KitchenSensor.Models;
 using Newtonsoft.Json;
 using SensorDataService;
 using System;

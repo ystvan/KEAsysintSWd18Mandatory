@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace KEAWebApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class DataController : Controller
     {
         private readonly ISensorHttpClient _sensorHttpClient;

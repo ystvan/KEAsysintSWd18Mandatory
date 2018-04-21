@@ -1,4 +1,4 @@
-﻿using HotelSecuritySensor.Models;
+﻿using KitchenSensor.Models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using UdpBase;
 
-namespace HotelSecuritySensor.Services
+namespace KitchenSensor.Services
 {
     public class UDPBroadCastService : UdpBaseClass
     {
