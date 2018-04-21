@@ -1,8 +1,10 @@
 ﻿using KEAWebApp.Models;
+using KEAWebApp.Models.Dtos;
 using KEAWebApp.Models.ViewModels;
 using KEAWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace KEAWebApp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class DataController : Controller
     {
         private readonly ISensorHttpClient _sensorHttpClient;
@@ -66,6 +68,76 @@ namespace KEAWebApp.Controllers
                     throw new ArgumentNullException(n.Message);
                 }
             }
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromForm] CreateDataViewModel measurement)
+        {            
+            if (!ModelState.IsValid)
+                return View(measurement);
+            if (ModelState.IsValid)
+            {
+                var modelForCreation = new SensorDto {
+
+                    Id = measurement.LocationIdentifier,
+                    Light = measurement.Light,
+                    Temperature = measurement.Temperature,
+                    TimeStamp = DateTime.Now.ToLongTimeString()
+                };
+
+                var serializedModel = JsonConvert.SerializeObject(modelForCreation);
+
+                var apiClient = await _sensorHttpClient.GetClient();
+
+                using (apiClient)
+                {
+                    try
+                    {
+                        var response = await apiClient.PostAsync("api/SensorDatas",
+                        new StringContent(serializedModel, System.Text.Encoding.Unicode, "application/json"));
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            var m = new ApiResponseViewModel();
+                            m.Content = response.Content.ToString();
+                            m.Message = response.Headers.ToString();
+                            m.StatusCode = response.StatusCode.ToString();
+                            
+                            return RedirectToAction("ShowOtherStatusCodesFromApi", m );
+                            
+                        }
+
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        throw new HttpRequestException(e.Message);
+                    }
+                    catch (ArgumentNullException n)
+                    {
+                        throw new ArgumentNullException(n.Message);
+                    }
+                }
+            }
+            return View(measurement);
+        }
+
+
+        [HttpGet]
+        public IActionResult ShowOtherStatusCodesFromApi(ApiResponseViewModel msgFromApi)
+        {
+            return View(msgFromApi);
         }
     }
 }
