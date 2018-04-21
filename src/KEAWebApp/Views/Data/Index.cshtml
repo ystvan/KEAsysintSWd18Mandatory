@@ -1,0 +1,43 @@
+﻿@model KEAWebApp.Models.ViewModels.ShowDataViewModel
+
+
+<br />
+<div class="container">
+    <div id="renderTable">
+        <table class="table table-bordered table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().LocationIdentifier)</th>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Light)</th>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().Temperature)</th>
+                    <th>@Html.DisplayNameFor(g => g.Datas.FirstOrDefault().RecordedAt)</th>
+
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var data in Model.Datas)
+                {
+                <tr>
+                    <td>@Html.ValueFor(modelItem => data.LocationIdentifier)</td>
+                    <td>@Html.DisplayFor(modelItem => data.Light)</td>
+                    <td>@Html.DisplayFor(modelItem => data.Temperature)</td>
+                    <td>@Html.ValueFor(modelItem => data.RecordedAt)</td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <br />
+        <br />
+        <br />
+
+    </div>
+    <button class="btn btn-default">
+        @Html.ActionLink("Go back to Home", "Index", "Home")
+    </button>
+
+
+</div>
